@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 import subprocess
 import os
+import platform #check for windows or linux
 class WeatherApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -55,6 +56,7 @@ class WeatherApp(QWidget):
         self.setLayout(layout)
 
     def submit(self):
+        system = platform.system()
         location = self.location_edit.text()
         language = self.language_edit.text()
         days = self.days_edit.text()
@@ -88,7 +90,7 @@ class WeatherApp(QWidget):
         
         #within the submit subroutine, a command should be issued to the engine corresponding with the user's preferences in the GUI
         #subprocess.run(["go","run","main.go"])
-        #os.system("go run main.go")
+        os.system("go run main.go " + days + " " + location)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     weather_app = WeatherApp()
