@@ -2,8 +2,7 @@ import sys
 #from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QLineEdit, QCheckBox, QMessageBox
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
-import subprocess
-import os
+import os #system calls to run go
 import platform #check for windows or linux
 class WeatherApp(QWidget):
     def __init__(self):
@@ -89,7 +88,17 @@ class WeatherApp(QWidget):
         print(f"Location: {location}, Language: {language}, Days: {days}, Units: {units[0]}")
         
         #within the submit subroutine, a command should be issued to the engine corresponding with the user's preferences in the GUI
-        #subprocess.run(["go","run","main.go"])
+        #config file changes, i assume its in home dir. could add a check later to see if it was changed
+        #windows home dir check
+        if system == "Windows":
+            home_dir = os.path.expanduser("~")
+        #assume if linux, mac, or unix-like then the config is in ~/.wegorc
+        else:
+            home_dir = "~"
+        #easy but messy way to achieve changes that cant be done on CLI is actually just changing the config file
+        #I should reset it back to defaults after the program runs or just add the functionality directly
+        
+        
         os.system("go run main.go " + days + " " + location)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
