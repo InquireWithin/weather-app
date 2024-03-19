@@ -2,6 +2,8 @@ import sys
 #from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QLineEdit, QCheckBox, QMessageBox
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
+import subprocess
+import os
 class WeatherApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -26,7 +28,6 @@ class WeatherApp(QWidget):
         # Days to display
         self.days_label = QLabel('Days to Display:')
         self.days_edit = QLineEdit()
-        #self.v = QIntValidator(1,7)
         self.days_edit.setValidator(QIntValidator(1,7))
         
         # Unit selection
@@ -54,15 +55,18 @@ class WeatherApp(QWidget):
         self.setLayout(layout)
 
     def submit(self):
-        location = self.location_combobox.currentText()
-        language = self.language_combobox.currentText()
+        location = self.location_edit.text()
+        language = self.language_edit.text()
         days = self.days_edit.text()
         units = []
-
+        isMetric = 0
         if self.metric_checkbox.isChecked():
             units.append('Metric')
+            isMetric=1
         if self.imperial_checkbox.isChecked():
             units.append('Imperial')
+            isMetric=0
+        
 
         if not days:
             QMessageBox.warning(self, 'Warning', 'Please enter the number of days to display.')
@@ -81,7 +85,10 @@ class WeatherApp(QWidget):
             return
 
         print(f"Location: {location}, Language: {language}, Days: {days}, Units: {units[0]}")
-
+        
+        #within the submit subroutine, a command should be issued to the engine corresponding with the user's preferences in the GUI
+        #subprocess.run(["go","run","main.go"])
+        #os.system("go run main.go")
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     weather_app = WeatherApp()
