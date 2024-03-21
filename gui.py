@@ -5,6 +5,7 @@ from PyQt6.QtGui import *
 import os #system calls to run go
 import platform #check for windows or linux
 class WeatherApp(QWidget):
+#TODO: users when they fresh download the program will not be able to request due to no API key, must be specified in .wegorc
     def __init__(self):
         super().__init__()
 
@@ -90,13 +91,18 @@ class WeatherApp(QWidget):
         #within the submit subroutine, a command should be issued to the engine corresponding with the user's preferences in the GUI
         #config file changes, i assume its in home dir. could add a check later to see if it was changed
         #windows home dir check
+        print("Platform = " + system)
         if system == "Windows":
             home_dir = os.path.expanduser("~")
-            file_path = home_dir + "\\.wegorc"
+            os.chdir(home_dir)
+            #file_path = home_dir + "\\.wegorc"
+            file_path = ".wegorc"
         #assume if linux, mac, or unix-like then the config is in ~/.wegorc
         else:
             home_dir = "~"
-            file_path = home_dir+"/.wegorc"
+            os.chdir(os.path.dirname(os.path.abspath(home_dir)))
+            #file_path = "~/.wegorc"
+            file_path = ".wegorc"
         #easy but messy way to achieve changes that cant be done on CLI is actually just changing the config file
         #I should reset it back to defaults after the program runs or just add the functionality directly
         temp_file_path = ".wegorc_temp"
@@ -109,7 +115,7 @@ class WeatherApp(QWidget):
         	for line in lines:
         		#check for units=
         		if line.strip().startswith("units="):
-        			#replace
+        			#replace with user preference
         			if isMetric==1:
         				temp_file.write("units=metric\n")
         			else:
