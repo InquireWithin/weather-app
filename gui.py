@@ -92,12 +92,33 @@ class WeatherApp(QWidget):
         #windows home dir check
         if system == "Windows":
             home_dir = os.path.expanduser("~")
+            file_path = home_dir + "\\.wegorc"
         #assume if linux, mac, or unix-like then the config is in ~/.wegorc
         else:
             home_dir = "~"
+            file_path = home_dir+"/.wegorc"
         #easy but messy way to achieve changes that cant be done on CLI is actually just changing the config file
         #I should reset it back to defaults after the program runs or just add the functionality directly
-        
+        temp_file_path = ".wegorc_temp"
+        #open orig file
+        with open(file_path, 'r') as file:
+        	lines = file.readlines()
+        	
+        #open temp file
+        with open(temp_file_path, 'w') as temp_file:
+        	for line in lines:
+        		#check for units=
+        		if line.strip().startswith("units="):
+        			#replace
+        			if isMetric==1:
+        				temp_file.write("units=metric\n")
+        			else:
+        				temp_file.write("units=imperial\n")
+        		else:
+        			temp_file.write(line)
+        			
+        os.replace(temp_file_path, file_path)
+        print(".wegorc was successfully edited")
         
         os.system("go run main.go " + days + " " + location)
 if __name__ == '__main__':
