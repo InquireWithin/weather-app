@@ -99,10 +99,7 @@ class WeatherApp(QWidget):
             file_path = ".wegorc"
         #assume if linux, mac, or unix-like then the config is in ~/.wegorc
         else:
-            home_dir = "~"
-            os.chdir(os.path.dirname(os.path.abspath(home_dir)))
-            #file_path = "~/.wegorc"
-            file_path = ".wegorc"
+            file_path = os.path.expanduser("~/.wegorc")
         #easy but messy way to achieve changes that cant be done on CLI is actually just changing the config file
         #I should reset it back to defaults after the program runs or just add the functionality directly
         temp_file_path = ".wegorc_temp"
