@@ -6,6 +6,12 @@ import os #system calls to run go
 import platform #check for windows or linux
 class WeatherApp(QWidget):
 #TODO: users when they fresh download the program will not be able to request due to no API key, must be specified in .wegorc
+#TODO: a better gui
+#TODO: lang supp
+#TODO: debug mode
+#TODO: better locations and add states for US?
+#TODO: install script (deps)
+#TODO: clean all non-owm stuff in config file
     def __init__(self):
         super().__init__()
 
@@ -19,10 +25,9 @@ class WeatherApp(QWidget):
         self.location_edit = QLineEdit()
         self.location_edit.setMaxLength(16)
         
-		#add option for airports and popular sites (eiffel tower, mount rushmore, etc)
-		#add option for different country, and if US is selected, dropdown box for state
+		
         # Language selection
-        self.language_label = QLabel('Select Language:')
+        self.language_label = QLabel('Select Language Code:')
         self.language_edit = QLineEdit()
         self.language_edit.setMaxLength(16)
 
@@ -68,11 +73,18 @@ class WeatherApp(QWidget):
         if self.imperial_checkbox.isChecked():
             units.append('Imperial')
             isMetric=0
-        
-
-        if not days:
-            QMessageBox.warning(self, 'Warning', 'Please enter the number of days to display.')
+            
+            
+            
+            
+        if not language:
+            QMessageBox.warning(self, 'Warning', 'Please enter a language.')
             return
+        elif len(language) !=2 or not all(ord(char) < 128 for char in language):
+            QMessageBox.warning(self, 'Warning', 'Please enter exactly 2 ASCII characters for language code.')
+            if not days:
+                QMessageBox.warning(self, 'Warning', 'Please enter the number of days to display.')
+                return
 
         days_int = int(days)
         if days_int < 1 or days_int > 7:
@@ -108,7 +120,11 @@ class WeatherApp(QWidget):
         	lines = file.readlines()
         	
         #open temp file
+        #add language changes as well
+        #OWM (openweathermap) is the default backend so assuming that is being used is best
+        #function for converting user input of language into 2-3 digit lang code or just require that for the language box
         with open(temp_file_path, 'w') as temp_file:
+            #temp_file.write(api-key)
         	for line in lines:
         		#check for units=
         		if line.strip().startswith("units="):
@@ -117,6 +133,12 @@ class WeatherApp(QWidget):
         				temp_file.write("units=metric\n")
         			else:
         				temp_file.write("units=imperial\n")
+        		#check for lang
+        		if line.strip().startswith("owm-lang="):
+        		    #replace with user preference
+        		    lang_pref = f"owm-lang={language}\n"
+        		    print(lang_pref)
+        		    temp_file.write(lang_pref)
         		else:
         			temp_file.write(line)
         			
