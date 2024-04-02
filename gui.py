@@ -5,13 +5,15 @@ from PyQt6.QtGui import *
 import os #system calls to run go
 import platform #check for windows or linux
 class WeatherApp(QWidget):
+#TODO: clean all non-owm stuff in config file
+#TODO: remember user settings next launch
 #TODO: users when they fresh download the program will not be able to request due to no API key, must be specified in .wegorc
 #TODO: a better gui
-#TODO: lang supp
-#TODO: debug mode
+#TODO: debug mode (built into engine, not added to gui)
+#TODO: install script (dependency check, platform specific)
+#TODO: instead of looping through config file, just state the changes and write, (remember user settings next time they launch gui, should read from config file and adjust gui elements accordingly, otherwise should use gui defaults
+#TODO: wego knows your location so i should add that to the default option, gui should autofill with this location
 #TODO: better locations and add states for US?
-#TODO: install script (deps)
-#TODO: clean all non-owm stuff in config file
     def __init__(self):
         super().__init__()
 
@@ -119,10 +121,7 @@ class WeatherApp(QWidget):
         with open(file_path, 'r') as file:
         	lines = file.readlines()
         	
-        #open temp file
-        #add language changes as well
-        #OWM (openweathermap) is the default backend so assuming that is being used is best
-        #function for converting user input of language into 2-3 digit lang code or just require that for the language box
+        
         with open(temp_file_path, 'w') as temp_file:
             #temp_file.write(api-key)
         	for line in lines:
@@ -137,18 +136,20 @@ class WeatherApp(QWidget):
         		if line.strip().startswith("owm-lang="):
         		    #replace with user preference
         		    lang_pref = f"owm-lang={language}\n"
-        		    print(lang_pref)
         		    temp_file.write(lang_pref)
         		else:
         			temp_file.write(line)
         			
         os.replace(temp_file_path, file_path)
         print(".wegorc was successfully edited")
-        
-        os.system("go run main.go " + days + " " + location)
+        if system == "Windows":
+            os.system("wego" + days + " " + location)
+        else:
+            os.system("go run main.go " + days + " " + location)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     weather_app = WeatherApp()
     weather_app.show()
+    #replace with default conf after? remember user settings?
     sys.exit(app.exec())
 
