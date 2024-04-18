@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="Background for weather app">
+    <file>Background_Sky.png</file>
+  </qresource>
+  <qresource prefix="Background for text">
+    <file>White Background.png</file>
+  </qresource>
+</RCC>
