@@ -7,11 +7,11 @@ import platform #check for windows or linux
 class WeatherApp(QWidget):
 #TODO: clean all non-owm stuff in config file
 #TODO: remember user settings next launch
-#TODO: users when they fresh download the program will not be able to request due to no API key, must be specified in .wegorc
 #TODO: a better gui
 #TODO: debug mode (built into engine, not added to gui)
-#TODO: install script (dependency check, platform specific)
+#TODO: install script (dependency check, platform specific, make sure API key is placed in .wegorc and that all non owm lines are removed (not entirely needed))
 #TODO: instead of looping through config file, just state the changes and write, (remember user settings next time they launch gui, should read from config file and adjust gui elements accordingly, otherwise should use gui defaults
+#		> also ensure that if user enters invalid value, ignore it and reset that value to a default or the previous value, to avoid breaking the file and also the program
 #TODO: wego knows your location so i should add that to the default option, gui should autofill with this location
 #TODO: better locations and add states for US?
     def __init__(self):
@@ -111,13 +111,15 @@ class WeatherApp(QWidget):
             os.chdir(home_dir)
             #file_path = home_dir + "\\.wegorc"
             file_path = ".wegorc"
-        #assume if linux, mac, or unix-like then the config is in ~/.wegorc
+        #assume if linux, mac, or unix-like then the config is in ~/.wegorc (could place it elsewhere?, dont want to clutter user home)
         else:
             file_path = os.path.expanduser("~/.wegorc")
         #easy but messy way to achieve changes that cant be done on CLI is actually just changing the config file
         #I should reset it back to defaults after the program runs or just add the functionality directly
         temp_file_path = ".wegorc_temp"
         #open orig file
+     
+        
         with open(file_path, 'r') as file:
         	lines = file.readlines()
         	
@@ -142,6 +144,7 @@ class WeatherApp(QWidget):
         			
         os.replace(temp_file_path, file_path)
         print(".wegorc was successfully edited")
+        #can probably do the same thing regardless of platform, linux should allow running 'wego' after installing via go but doesn't sometimes, maybe needs path updates?
         if system == "Windows":
             os.system("wego" + days + " " + location)
         else:
