@@ -174,6 +174,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
            file_path = os.path.expanduser("~/.wegorc")
         #easy but messy way to achieve changes that cant be done on CLI is actually just changing the config file
         #I should reset it back to defaults after the program runs or just add the functionality directly
+        
+        #****************create this file if it doesnt exist, linux is fine with it not existing, windows is not************************
        temp_file_path = ".wegorc_temp"
         #open orig file
      
