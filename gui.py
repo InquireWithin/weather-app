@@ -10,7 +10,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.setupUi(self)
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
+        MainWindow.setObjectName("Weather App")
         MainWindow.resize(491, 428)
         MainWindow.setStyleSheet("background-image: url(Background_Sky.png);")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
