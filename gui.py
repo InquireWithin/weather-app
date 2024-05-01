@@ -176,7 +176,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         #I should reset it back to defaults after the program runs or just add the functionality directly
         
         #****************create this file if it doesnt exist, linux is fine with it not existing, windows is not************************
+        
        temp_file_path = ".wegorc_temp"
+       if not os.path.exists(temp_file_path):
+           with open(temp_file_path, 'w'):
+               pass
         #open orig file
      
         
@@ -204,11 +208,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         			
        os.replace(temp_file_path, file_path)
        print(".wegorc was successfully edited")
-        #can probably do the same thing regardless of platform, linux should allow running 'wego' after installing via go but doesn't sometimes, maybe needs path updates?
-       if system == "Windows":
-           os.system("wego" + days + " " + location)
-       else:
-           os.system("go run main.go " + days + " " + location)
+       os.system("go run main.go " + days + " " + location)
         
 if __name__ == '__main__':
 		app = QApplication(sys.argv)
